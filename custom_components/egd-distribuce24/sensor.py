@@ -61,7 +61,7 @@ SCRIPT_VERSION = "1.0.14_sensor_selection" # Version marker
 
 _LOGGER = logging.getLogger(__name__)
 
-LOG_DIR = "/config/logs/egdczpowerdata" 
+LOG_DIR = "/config/logs/egd-distribuce24" 
 LOG_FILE = os.path.join(LOG_DIR, f"{DOMAIN}.log")
 
 try:
@@ -85,8 +85,8 @@ async def async_setup_entry(
     config_entry: config_entries.ConfigEntry, 
     async_add_entities: AddEntitiesCallback, 
 ) -> None:
-    """Set up EGD CZ Power Data sensors from a config entry."""
-    _LOGGER.info(f"Setting up sensors for EGD CZ Power Data config entry: {config_entry.title} (Script Version: {SCRIPT_VERSION})")
+    """Set up EGD-Distribuce24 sensors from a config entry."""
+    _LOGGER.info(f"Setting up sensors for EGD-Distribuce24 config entry: {config_entry.title} (Script Version: {SCRIPT_VERSION})")
 
     entry_data = config_entry.data
     client_id = entry_data[CONF_CLIENT_ID]
