@@ -69,7 +69,7 @@ async def validate_api_credentials(hass, client_id: str, client_secret: str) -> 
         return {"base": "unknown"}
 
 
-class EgdCzPowerDataConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class EGDDistribuce24ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for EGD-Distribuce24."""
 
     VERSION = 1
