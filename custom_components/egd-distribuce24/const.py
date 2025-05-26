@@ -1,9 +1,9 @@
-"""Constants for the EGD CZ Power Data integration."""
+"""Constants for the EGD-Distribuce24 integration."""
 
 from datetime import timedelta
 
 # Integration domain
-DOMAIN = "egdczpowerdata"
+DOMAIN = "egd-distribuce24"
 
 # Configuration keys
 CONF_CLIENT_ID = "client_id"
