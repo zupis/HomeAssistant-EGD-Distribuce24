@@ -1,4 +1,4 @@
-"""Config flow for EGD CZ Power Data integration."""
+"""Config flow for EGD-Distribuce24 integration."""
 import logging
 import voluptuous as vol
 import asyncio 
@@ -70,7 +70,7 @@ async def validate_api_credentials(hass, client_id: str, client_secret: str) -> 
 
 
 class EgdCzPowerDataConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for EGD CZ Power Data."""
+    """Handle a config flow for EGD-Distribuce24."""
 
     VERSION = 1
 
