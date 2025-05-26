@@ -1,0 +1,1 @@
+# HomeAssistant-EGD-Distribuce24
