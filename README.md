@@ -1,4 +1,4 @@
-# EGD Distribuce24 - Home Assistant Integration
+# EGD Distribuce24 - Home Assistant Integration - **Not Finished Yet!!**
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]][license]
