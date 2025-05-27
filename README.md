@@ -1,4 +1,4 @@
-# EGD Distribuce24 - Home Assistant Integration - **NOT FINISHED YET**
+# EGD Distribuce24 - Home Assistant Integration
 
 [![GitHub Release][releases-shield]][releases]
 [![License][license-shield]][license]
@@ -6,38 +6,42 @@
 
 Integration for Home Assistant that loads electricity consumption and (optional) production data from the API of the [Distribuce24](https://www.distribuce24.cz/) service, operated by EG.D, a.s. This integration uses the [OpenAPI EG.D](https://data.distribuce24.cz/openapi/egd/namerena-data/latest/).
 
+**This integration requires the [Spook custom integration](https://github.com/frenck/spook) to be installed and active in your Home Assistant instance, as it relies on services potentially modified or provided by Spook for statistics import.**
+
 ## Prerequisites
 
 1.  **Account with EG.D Distribuce24**: You must have an active account on the [portal.distribuce24.cz](https://portal.distribuce24.cz/) portal.
 2.  **Generated API Keys**: You need to generate a `Client ID` and `Client Secret` in the EG.D customer portal (portal.distribuce24.cz).
     * You can find them in the "Správa účtů" (Account Management) section -> "VZDÁLENÝ PŘÍSTUP - OPENAPI" (REMOTE ACCESS - OPENAPI) tab -> "VYGENEROVAT CLIENT_ID A CLIENT_SECRET" (GENERATE CLIENT_ID AND CLIENT_SECRET) button.
-    * These keys are used to obtain an access token, which is valid until midnight of the day it was generated. The integration automatically renews the token.
-3.  **Spook Custom Integration**: This integration relies on the `recorder.import_statistics` service, which might be enhanced or modified by the [Spook custom integration](https://github.com/frenck/spook). It is recommended to have Spook installed and updated to ensure compatibility, especially if you encounter issues with statistics import.
+    * These keys are used to obtain an access token. According to the official API documentation, the access token is valid until midnight of the day it was generated, and the integration handles its automatic renewal.
+3.  **Spook Custom Integration**: **This integration is strictly dependent on the Spook custom integration.** Spook must be installed and active in your Home Assistant instance. This EGD integration uses the `recorder.import_statistics` service, and its behavior or schema might be reliant on Spook's modifications. Without Spook, this integration will not function correctly. You can install Spook via HACS.
 
 ## Installation
 
 ### Recommended Method: HACS (Home Assistant Community Store)
 
-1.  If you don't have HACS, install it according to the [official guide](https://hacs.xyz/docs/installation/prerequisites).
-2.  Open HACS in Home Assistant.
-3.  Go to the "Integrations" section.
-4.  Click on the three dots in the upper right corner and select "Custom repositories".
-5.  In the "Repository" field, paste the URL of your GitHub repository: `https://github.com/zupis/HomeAssistant-EGD-Distribuce24`
-6.  Select "Integration" as the "Category".
-7.  Click "Add".
-8.  Search for "EGD-Distribuce24" in HACS and click "Install".
-9.  Follow the instructions and restart Home Assistant.
+1.  Ensure Spook is installed via HACS.
+2.  If you don't have HACS, install it according to the [official guide](https://hacs.xyz/docs/installation/prerequisites).
+3.  Open HACS in Home Assistant.
+4.  Go to the "Integrations" section.
+5.  Click on the three dots in the upper right corner and select "Custom repositories".
+6.  In the "Repository" field, paste the URL of your GitHub repository: `https://github.com/zupis/HomeAssistant-EGD-Distribuce24`
+7.  Select "Integration" as the "Category".
+8.  Click "Add".
+9.  Search for "EGD-Distribuce24" in HACS and click "Install".
+10. Follow the instructions and restart Home Assistant.
 
 ### Manual Installation
 
-1.  Download the latest [release](https://github.com/zupis/HomeAssistant-EGD-Distribuce24/releases) of your integration from GitHub.
-2.  Unzip the archive and copy the `egd_distribuce24` folder (containing files like `manifest.json`, `sensor.py`, etc.) into the `custom_components` folder in your Home Assistant configuration directory. If the `custom_components` folder does not exist, create it.
+1.  Ensure Spook is installed.
+2.  Download the latest [release](https://github.com/zupis/HomeAssistant-EGD-Distribuce24/releases) of your integration from GitHub.
+3.  Unzip the archive and copy the `egd_distribuce24` folder (containing files like `manifest.json`, `sensor.py`, etc.) into the `custom_components` folder in your Home Assistant configuration directory. If the `custom_components` folder does not exist, create it.
     * The path should look like: `<config_directory>/custom_components/egd_distribuce24/`.
-3.  Restart Home Assistant.
+4.  Restart Home Assistant.
 
 ## Configuration
 
-After installation and restarting Home Assistant, you can add the integration via the UI:
+After installation (including Spook) and restarting Home Assistant, you can add the integration via the UI:
 
 1.  Go to "Settings" -> "Devices & Services".
 2.  Click the "+ ADD INTEGRATION" button in the bottom right.
@@ -92,16 +96,15 @@ Energy and power sensors may contain the following attributes:
 
 * **Data Update Frequency**: Data for metering points is updated on the EG.D side **once a day in the afternoon**.
 * **API Call Limitations**: Frequent repeated API calls load the distributor's system and may lead to temporary blocking of your access. The default synchronization interval in this integration is set to 4 hours (can be changed in `const.py`, but significantly shortening it is not recommended).
-* **Token Validity**: The access token is valid until midnight of the day it was generated. The integration handles its automatic renewal.
+* **Token Validity**: According to the official API documentation, the access token is valid until midnight of the day it was generated. The integration handles its automatic renewal.
 
 ## Troubleshooting
 
 * If data is not loading or is displayed incorrectly in the Energy Dashboard, check the Home Assistant logs (Settings -> System -> Logs -> Load Full Home Assistant Logs) for messages from the `custom_components.egd_distribuce24` component (especially those prefixed with `[EGD_DISTRIBUCE24_DEBUG]`).
 * Verify the correctness of your EAN, Client ID, and Client Secret.
-* Ensure you have an active internet connection.
+* Ensure you have an active internet connection and that the Spook integration is installed and active.
 * If you recently changed settings or updated the integration, restart Home Assistant.
 * If you have display issues in the Energy Dashboard, try going to "Developer Tools" -> "Statistics", find your sensor (e.g., `sensor.egd_consumption_energy_icq2_...`), and check if any issues are reported there (a "FIX ISSUE" button might appear).
-* **Spook Integration**: If you are using the Spook custom integration, be aware that it can modify or enhance core Home Assistant services, including `recorder.import_statistics`. If you encounter unexpected behavior with statistics import, ensure Spook is up to date or temporarily disable it to see if it resolves the issue, helping to isolate the cause.
 
 ## Contributing
 
@@ -113,5 +116,5 @@ This integration is provided under the MIT License. (Please add a `LICENSE` file
 
 [releases]: https://github.com/zupis/HomeAssistant-EGD-Distribuce24/releases
 [releases-shield]: https://img.shields.io/github/release/zupis/HomeAssistant-EGD-Distribuce24.svg?style=for-the-badge
-[license]: https://github.com/zupis/HomeAssistant-EGD-Distribuce24/blob/main/LICENSE
+[license]: https://github.com/zupis/HomeAssistant-EGD-Distribuce24/blob/main/LICENSE 
 [license-shield]: https://img.shields.io/github/license/zupis/HomeAssistant-EGD-Distribuce24.svg?style=for-the-badge
