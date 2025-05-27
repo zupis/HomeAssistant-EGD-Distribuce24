@@ -1,16 +1,19 @@
 {
-    "domain": "egd-distribuce24",
+    "domain": "egd_distribuce24",
     "name": "EGD-Distribuce24",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "documentation": "https://github.com/zupis/HomeAssistant-EGD-Distribuce24",
     "requirements": [
         "requests",
         "python-dateutil"
     ],
-    "dependencies": [],
+    "dependencies": [
+        "recorder"
+    ],
     "codeowners": [
         "@zupis"
     ],
     "iot_class": "cloud_polling",
-    "config_flow": true
+    "config_flow": true,
+    "icon": "custom_components/egd_distribuce24/egd-logo-red.svg"
 }
