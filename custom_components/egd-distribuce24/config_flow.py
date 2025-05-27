@@ -11,16 +11,16 @@ from homeassistant.const import (
 from homeassistant.helpers.aiohttp_client import async_get_clientsession 
 
 from .const import (
-    DOMAIN,
+    DOMAIN, # DOMAIN will now be "egd_distribuce24"
     CONF_EAN,
     CONF_DAYS_OFFSET,
     CONF_MAX_FETCH_DAYS, 
-    CONF_CREATE_CONSUMPTION_SENSORS, # New
-    CONF_CREATE_PRODUCTION_SENSORS,  # New
+    CONF_CREATE_CONSUMPTION_SENSORS,
+    CONF_CREATE_PRODUCTION_SENSORS,
     DEFAULT_DAYS_OFFSET,
     DEFAULT_MAX_FETCH_DAYS, 
-    DEFAULT_CREATE_CONSUMPTION_SENSORS, # New
-    DEFAULT_CREATE_PRODUCTION_SENSORS,  # New
+    DEFAULT_CREATE_CONSUMPTION_SENSORS,
+    DEFAULT_CREATE_PRODUCTION_SENSORS,
     TOKEN_URL,
     API_GRANT_TYPE,
     API_SCOPE,
@@ -35,8 +35,8 @@ DATA_SCHEMA = vol.Schema(
         vol.Required(CONF_CLIENT_SECRET): str,
         vol.Optional(CONF_DAYS_OFFSET, default=DEFAULT_DAYS_OFFSET): vol.All(vol.Coerce(int), vol.Range(min=0, max=365)), 
         vol.Optional(CONF_MAX_FETCH_DAYS, default=DEFAULT_MAX_FETCH_DAYS): vol.All(vol.Coerce(int), vol.Range(min=1, max=7)),
-        vol.Optional(CONF_CREATE_CONSUMPTION_SENSORS, default=DEFAULT_CREATE_CONSUMPTION_SENSORS): bool, # New
-        vol.Optional(CONF_CREATE_PRODUCTION_SENSORS, default=DEFAULT_CREATE_PRODUCTION_SENSORS): bool,   # New
+        vol.Optional(CONF_CREATE_CONSUMPTION_SENSORS, default=DEFAULT_CREATE_CONSUMPTION_SENSORS): bool,
+        vol.Optional(CONF_CREATE_PRODUCTION_SENSORS, default=DEFAULT_CREATE_PRODUCTION_SENSORS): bool,
     }
 )
 
@@ -69,6 +69,7 @@ async def validate_api_credentials(hass, client_id: str, client_secret: str) -> 
         return {"base": "unknown"}
 
 
+@config_entries.HANDLERS.register(DOMAIN) # Use the new DOMAIN here
 class EGDDistribuce24ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for EGD-Distribuce24."""
 
@@ -78,6 +79,8 @@ class EGDDistribuce24ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Handle the initial step of the config flow (user-initiated)."""
         errors = {}
         if user_input is not None:
+            # Set unique_id based on EAN to prevent duplicate entries for the same EAN
+            # within this domain.
             await self.async_set_unique_id(user_input[CONF_EAN])
             self._abort_if_unique_id_configured()
 
@@ -86,8 +89,6 @@ class EGDDistribuce24ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
 
             if validation_result.get("status") == "ok":
-                # Ensure boolean defaults are correctly passed if user unchecks them
-                # (user_input might not contain the key if it's unchecked and was default true)
                 user_input[CONF_CREATE_CONSUMPTION_SENSORS] = user_input.get(CONF_CREATE_CONSUMPTION_SENSORS, False)
                 user_input[CONF_CREATE_PRODUCTION_SENSORS] = user_input.get(CONF_CREATE_PRODUCTION_SENSORS, False)
                 
@@ -105,3 +106,4 @@ class EGDDistribuce24ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "max_fetch_days_note": f"Maximální počet dalších dní pro zpětné hledání, pokud primární cíl nemá data. Výchozí: {DEFAULT_MAX_FETCH_DAYS}."
             }
         )
+
