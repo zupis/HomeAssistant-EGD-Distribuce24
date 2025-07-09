@@ -175,7 +175,7 @@ class EGDBaseSensor(SensorEntity):
                  profile_friendly_name: str, entry_id: str,
                  is_value_direct_kwh: bool = False,
                  target_unit: str = UnitOfEnergy.KILO_WATT_HOUR,
-                 target_state_class: SensorStateClass = SensorStateClass.TOTAL):
+                 target_state_class: SensorStateClass = SensorStateClass.TOTAL_INCREASING):
         _LOGGER.info(f"{DEBUG_PREFIX} EGDBaseSensor __init__ CALLED for profile: {api_profile}, EAN: {ean}")
         self.hass = hass
         self._client_id = client_id
@@ -346,7 +346,7 @@ class EGDBaseSensor(SensorEntity):
                     self._state = 0.0 
                     self._last_reset_datetime_utc = None 
                     _LOGGER.info(f"{DEBUG_PREFIX} For energy sensor {self.name}, main state set to {self._state}, daily_total_kwh attribute: {self._attributes['daily_total_kwh']}, main last_reset: None")
-                elif self._target_state_class == SensorStateClass.TOTAL: 
+                elif self._target_state_class == SensorStateClass.TOTAL_INCREASING: 
                     self._state = processed_data["total_kwh_for_day"] 
                     self._last_reset_datetime_utc = period_start_local.astimezone(timezone.utc)
                 elif self._target_state_class == SensorStateClass.MEASUREMENT: 
@@ -429,7 +429,6 @@ class EGDBaseSensor(SensorEntity):
                                 "sum": current_day_cumulative_sum, 
                                 "max": current_day_cumulative_sum, 
                             })
-                        
                         if stats_payload_list:
                             _LOGGER.info(f"{DEBUG_PREFIX} STATISTICS IMPORT: Final CUMULATIVE stats_payload_list for {self.entity_id} (first 3 items): {stats_payload_list[:3]}")
                             
@@ -649,7 +648,7 @@ class EGDEnergyConsumptionSensor(EGDBaseSensor):
                          PROFILE_CONSUMPTION_ENERGY, f"Consumption Energy ({PROFILE_CONSUMPTION_ENERGY})", entry_id,
                          is_value_direct_kwh=True,
                          target_unit=UnitOfEnergy.KILO_WATT_HOUR,
-                         target_state_class=SensorStateClass.TOTAL)
+                         target_state_class=SensorStateClass.TOTAL_INCREASING)
 
 class EGDEnergyProductionSensor(EGDBaseSensor):
     """Sensor for EGD energy production (ISQ2 - kWh)."""
@@ -659,7 +658,7 @@ class EGDEnergyProductionSensor(EGDBaseSensor):
                          PROFILE_PRODUCTION_ENERGY, f"Production Energy ({PROFILE_PRODUCTION_ENERGY})", entry_id,
                          is_value_direct_kwh=True,
                          target_unit=UnitOfEnergy.KILO_WATT_HOUR,
-                         target_state_class=SensorStateClass.TOTAL)
+                         target_state_class=SensorStateClass.TOTAL_INCREASING)
 
 
 class EGDStatusSensor(SensorEntity):
